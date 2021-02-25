@@ -1,16 +1,19 @@
 import "../src/styles/global.css"
 import Head from "next/head"
-import { ChallengesContext } from "../src/contexts/ChallengeContext"
+import { ChallengesProvider } from "../src/contexts/ChallengeContext"
+import { CountdownProvider } from "../src/contexts/CountdownContext"
 
 function MyApp({ Component, pageProps }) {
   return (
 
-    <ChallengesContext>
-      <Head>
-        <title>Moveit</title>
-      </Head>
-      <Component {...pageProps} />
-    </ChallengesContext>
+    <ChallengesProvider>
+      <CountdownProvider>
+        <Head>
+          <title>Moveit</title>
+        </Head>
+        <Component {...pageProps} />
+      </CountdownProvider>
+    </ChallengesProvider>
 
   )
 }
