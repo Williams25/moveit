@@ -21,7 +21,9 @@
 .countdownContainer>div span {
   flex: 1;
 }
-
+.countdownContainer div span {
+  min-width: 5rem;
+}
 .countdownContainer>div span:first-child {
   border-right: 1px solid #f0f1f3;
 }
