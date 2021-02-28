@@ -4,7 +4,7 @@ import styles from "./Countdown.module.css"
 
 export const Countdown = () => {
 
-  const { hasFinished, isActive, minutes, seconds, resetCountdown, startCountdown } = useContext(CountdownContext)
+  const { hasFinished, isActive, minutes, seconds, resetCountdown, startCountdown, Timer } = useContext(CountdownContext)
 
   const [minuteLeft, minuteRight,] = String(minutes).padStart(2, "0").split("")
   const [secondsLeft, secondsRight,] = String(seconds).padStart(2, "0").split("")
@@ -36,13 +36,18 @@ export const Countdown = () => {
             <>
               {
                 isActive && (
-                  <button
-                    type="button"
-                    className={`${styles.countdownButton} ${styles.countdownButtonActive}`}
-                    onClick={resetCountdown}
-                  >
-                    Abandonar ciclo
+                  <>
+                    <button
+                      type="button"
+                      className={`${styles.countdownButton} ${styles.countdownButtonActive}`}
+                      onClick={resetCountdown}
+                    >
+                      Abandonar ciclo
                   </button>
+                    <div className={styles.countdownButtonTimeTransition}>
+                      <div style={{ animationDuration: `${Timer}s` }} />
+                    </div>
+                  </>
                 )
               }
 
