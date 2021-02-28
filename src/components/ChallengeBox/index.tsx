@@ -33,23 +33,23 @@ export const ChallengeBox = () => {
               <p>
                 {activeChallenge.description}
               </p>
-              <footer>
-                <button
-                  type="button"
-                  className={styles.challengeFailButton}
-                  onClick={handleChallengeFailed}
-                >
-                  Falhei
-                </button>
-                <button
-                  type="button"
-                  className={styles.challengeSuucceededButton}
-                  onClick={handleChallengeSucceeded}
-                >
-                  Completei
-                </button>
-              </footer>
             </main>
+            <footer>
+              <button
+                type="button"
+                className={styles.challengeFailButton}
+                onClick={handleChallengeFailed}
+              >
+                Falhei
+                </button>
+              <button
+                type="button"
+                className={styles.challengeSuucceededButton}
+                onClick={handleChallengeSucceeded}
+              >
+                Completei
+                </button>
+            </footer>
           </div>
         ) :
           (
