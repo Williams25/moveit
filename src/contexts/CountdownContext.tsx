@@ -8,6 +8,7 @@ interface CountdownContextData {
   hasFinished: boolean
   startCountdown: () => void
   resetCountdown: () => void
+  Timer: number
 }
 
 interface CountdownContextProps {
@@ -19,8 +20,8 @@ export const CountdownContext = createContext({} as CountdownContextData)
 let countdownTimeout: NodeJS.Timeout
 
 export const CountdownProvider = ({ children }: CountdownContextProps) => {
-
-  const [time, setTime] = useState(25 * 60)
+  const Timer = 0.1 * 60
+  const [time, setTime] = useState(Timer)
   const [isActive, setIsActive] = useState(false)
   const [hasFinished, setHasFinished] = useState(false)
 
@@ -39,7 +40,7 @@ export const CountdownProvider = ({ children }: CountdownContextProps) => {
     clearTimeout(countdownTimeout)
     setIsActive(false)
     setHasFinished(false)
-    setTime(25 * 60)
+    setTime(Timer)
   }
 
 
@@ -58,6 +59,7 @@ export const CountdownProvider = ({ children }: CountdownContextProps) => {
   return (
     <CountdownContext.Provider
       value={{
+        Timer,
         minutes,
         seconds,
         isActive,
