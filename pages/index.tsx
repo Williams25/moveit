@@ -1,77 +1,83 @@
 import Head from "next/head"
-import { GetServerSideProps } from "next"
-import { ChallengeBox } from "../src/components/ChallengeBox"
-import { CompliteChallenges } from "../src/components/CompliteChallenges"
-import { Countdown } from "../src/components/Countdown"
-import { ExperienceBar } from "../src/components/ExperienceBar"
-import { Profile } from "../src/components/Profile"
-import { ChallengesProvider } from "../src/contexts/ChallengeContext"
-import { CountdownProvider } from "../src/contexts/CountdownContext"
+import { MenuBarContext } from "../src/contexts/MenuBarContext"
+import { useContext, useEffect } from "react"
+import { useRouter } from "next/router"
 import { motion } from "framer-motion"
-import styles from "../src/styles/Home.module.css"
+import styles from "../src/styles/Login.module.css"
 
-interface HomeProps {
-  level: number
-  currentExperience: number
-  challengesCompleted: number
-}
+const Home = () => {
 
-export default function Home({ challengesCompleted, currentExperience, level }: HomeProps): JSX.Element {
+  const { menuDisabled, isMenuBarActive } = useContext(MenuBarContext)
+
+  const router = useRouter()
+
+  const handleToLoginSuccess = () => {
+    router.push('home')
+  }
+
+  const handleToSubmit = e => {
+    e.preventDefault()
+  }
+
+  useEffect(() => {
+    menuDisabled()
+  }, [isMenuBarActive])
+
   return (
-    <ChallengesProvider
-      challengesCompleted={challengesCompleted}
-      currentExperience={currentExperience}
-      level={level}
-    >
-      <CountdownProvider>
-        <div className={styles.container}>
-          <Head>
-            <title>Home | Moveit</title>
-          </Head>
+    <div className={styles.containerLogin}>
+      <Head>
+        <title>Login | Moveit</title>
+      </Head>
 
-          <ExperienceBar />
 
-          <section>
-            <motion.div
-              transition={{ delay: 0, duration: 0.8 }}
-              variants={{
-                show: { opacity: 1, y: '0' },
-                hidden: { opacity: 0, y: '-100%' },
-              }}
-              initial="hidden"
-              animate="show"
-            >
-              <Profile />
-              <CompliteChallenges />
-              <Countdown />
-            </motion.div>
+      <motion.div className={styles.content}
+        transition={{ delay: 0, duration: 0.8 }}
+        variants={{
+          show: { opacity: 1, y: '0' },
+          hidden: { opacity: 0, y: '-100%' },
+        }}
+        initial="hidden"
+        animate="show">
 
-            <motion.div
-              transition={{ delay: 0, duration: 1 }}
-              variants={{
-                show: { opacity: 1, y: '0' },
-                hidden: { opacity: 0, y: '100%' },
-              }}
-              initial="hidden"
-              animate="show"
-            >
-              <ChallengeBox />
-            </motion.div>
-          </section>
+        <img src="logo-full.svg" alt="" />
+
+        <span>Bem-vindo</span>
+
+        <div className={styles.github}>
+          <p>
+            <img src="github.svg" alt="" />
+            Faça login com seu Github
+            para começar
+          </p>
         </div>
-      </CountdownProvider>
-    </ChallengesProvider>
+
+        <form method="post"
+          onSubmit={handleToSubmit}
+
+        >
+          <input type="text"
+            placeholder="Digite seu usuario do GitHub"
+          />
+          <input type="password"
+            placeholder="Digite sua senha"
+          />
+          <button
+            className={styles.login}
+            onClick={handleToLoginSuccess}>
+            Login
+          </button>
+
+          <button
+            className={styles.cadastrar}
+            onClick={() => router.push('cadastrar')}>
+            Cadastrar-se
+          </button>
+        </form>
+
+      </motion.div>
+
+    </div>
   )
 }
 
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { level, currentExperience, challengesCompleted } = context.req.cookies
-  return {
-    props: {
-      level: Number(level),
-      currentExperience: Number(currentExperience),
-      challengesCompleted: Number(challengesCompleted)
-    }
-  }
-}
+export default Home
