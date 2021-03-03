@@ -1,39 +1,35 @@
 import Head from "next/head"
-import { MenuBarContext } from "../src/contexts/MenuBarContext"
+import { MenuBarContext } from "../../src/contexts/MenuBarContext"
 import { useContext, useEffect, useState } from "react"
 import { useRouter } from "next/router"
 import { motion } from "framer-motion"
-import { UserContext, UserProvider } from "../src/contexts/UserContext"
-import Users from "../src/services/user"
-import styles from "../src/styles/Login.module.css"
+import Users from "../../src/services/user"
+import styles from "../../src/styles/Cadastrar.module.css"
 
-const Home = () => {
-
+const Cadastrar = () => {
   const [userName, setUserName] = useState('')
   const [password, setPassword] = useState('')
   const [erro, setErro] = useState('')
 
   const { menuDisabled, isMenuBarActive } = useContext(MenuBarContext)
-  const { handleModificationStates, saveCookies } = useContext(UserContext)
 
   const router = useRouter()
 
-  const handleToSubmit = e => {
-    e.preventDefault()
-  }
-
-  const login = async () => {
-    await Users.login(userName, password).then(res => {
-      if (res.status === 202) {
-        const { userName, avatar_url, name, id } = res.data
-        handleModificationStates({ userName, avatar: avatar_url, name })
-        saveCookies({ id, userName, avatar: avatar_url, name })
-        router.push('home')
+  const cadastrar = async () => {
+    await Users.cadastrar({ userName, password }).then(res => {
+      if (res.status === 201) {
+        setUserName("")
+        setPassword("")
+        setErro("Cadastrado com sucesso")
       }
     }).catch(e => {
-      const { mensagem } = e.response.data
-      setErro(mensagem)
+      const { message } = e.response.data
+      setErro(message)
     })
+  }
+
+  const handleToSubmit = e => {
+    e.preventDefault()
   }
 
   useEffect(() => {
@@ -58,18 +54,19 @@ const Home = () => {
 
         <img src="logo-full.svg" alt="" />
 
-        <span>Bem-vindo</span>
+        <span>Cadastrar-se</span>
 
         <div className={styles.github}>
           <p>
             <img src="github.svg" alt="" />
-            Faça login com seu Github
+            Cadastre-se com seu Github
             para começar
           </p>
         </div>
 
         <form method="post"
           onSubmit={handleToSubmit}
+
         >
           <input type="text"
             placeholder="Digite seu usuario do GitHub"
@@ -81,25 +78,29 @@ const Home = () => {
             value={password}
             onChange={e => setPassword(e.target.value)}
           />
-          <button
-            className={styles.login}
-            onClick={login}>
-            Login
-          </button>
 
           <button
             className={styles.cadastrar}
-            onClick={() => router.push('cadastrar')}>
+            style={{ background: "#4cd62b" }}
+            onClick={cadastrar}>
             Cadastrar-se
+          </button>
+
+          <button
+            className={styles.login}
+            style={{ background: "#2aa9e0" }}
+            onClick={() => router.push('/')}>
+            Voltar para Login
           </button>
           <span className={styles.erro}>
             {erro}
           </span>
         </form>
+
       </motion.div>
 
     </div>
   )
 }
 
-export default Home
+export default Cadastrar

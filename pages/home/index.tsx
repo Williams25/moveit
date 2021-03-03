@@ -16,9 +16,13 @@ interface HomeProps {
   level: number
   currentExperience: number
   challengesCompleted: number
+  userName: string
+  name: string
+  avatar: string
 }
 
-export default function Home({ challengesCompleted, currentExperience, level }: HomeProps) {
+export default function Home({ challengesCompleted, currentExperience, level, avatar, name, userName }: HomeProps) {
+
   const { menuActive, isMenuBarActive } = useContext(MenuBarContext)
 
   useEffect(() => {
@@ -49,7 +53,20 @@ export default function Home({ challengesCompleted, currentExperience, level }: 
               initial="hidden"
               animate="show"
             >
-              <Profile />
+              <Profile
+                avatar={
+                  avatar.length > 1 && avatar ?
+                    avatar : localStorage.getItem('avatar')
+                }
+                name={
+                  name.length > 1 && name ?
+                    name : localStorage.getItem('name')
+                }
+                userName={
+                  userName.length > 1 && userName ?
+                    userName : localStorage.getItem('userName')
+                }
+              />
               <CompliteChallenges />
               <Countdown />
             </motion.div>
@@ -74,12 +91,16 @@ export default function Home({ challengesCompleted, currentExperience, level }: 
 
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { level, currentExperience, challengesCompleted } = context.req.cookies
+  const { level, currentExperience, challengesCompleted, avatar, name, userName } = context.req.cookies
+
   return {
     props: {
       level: Number(level),
       currentExperience: Number(currentExperience),
-      challengesCompleted: Number(challengesCompleted)
+      challengesCompleted: Number(challengesCompleted),
+      avatar: String(avatar),
+      name: String(name),
+      userName: String(userName)
     }
   }
 }

@@ -2,6 +2,7 @@ import { createContext, useState, ReactNode, useEffect } from "react"
 import challenges from "../../challenges.json"
 import Cookies from "js-cookie"
 import LevelUpModal from "../components/LevelUpModal"
+import Moves from "../services/moves"
 
 interface Challenge {
   type: string
@@ -17,9 +18,10 @@ interface ChallengeContextData {
   startNewChallenge: () => void
   activeChallenge: Challenge
   resetChallenge: () => void
-  experienceToNextLevel: number,
+  experienceToNextLevel: number
   compliteChallenge: () => void
   closeLevelUpModal: () => void
+  atualizaMoves: () => void
 }
 
 interface ChallengesContextProps {
@@ -82,14 +84,39 @@ export const ChallengesProvider = ({ children, ...rest }: ChallengesContextProps
 
   const closeLevelUpModal = () => setIsLevelModalOpen(false)
 
+  const atualizaMoves = async () => {
+    const user = await localStorage.getItem("user")
+    await Moves.findOne(Number(user)).then(res => {
+      const obj = res.data
+      setChallengesCompleted(obj.challengesCompleted)
+      setCurrentExperience(obj.currentExperience)
+      setLevel(obj.level)
+    }).catch(e => {
+
+    })
+  }
+
+  const modificadeMoves = async () => {
+    const user = await localStorage.getItem("user")
+    await Moves.updade(Number(user), currentExperience, challengesCompleted, level).then(res => {
+      console.log(res.data)
+      atualizaMoves()
+    }).catch(e => {
+      const { message } = e.response.data
+      console.log(message)
+    })
+  }
+
   useEffect(() => {
     Notification.requestPermission()
+    atualizaMoves()
   }, [])
-
+  
   useEffect(() => {
     Cookies.set('level', String(level))
     Cookies.set('currentExperience', String(currentExperience))
     Cookies.set('challengesCompleted', String(challengesCompleted))
+    modificadeMoves()
   }, [level, currentExperience, challengesCompleted])
 
   return (
@@ -104,13 +131,14 @@ export const ChallengesProvider = ({ children, ...rest }: ChallengesContextProps
         resetChallenge,
         experienceToNextLevel,
         compliteChallenge,
-        closeLevelUpModal
+        closeLevelUpModal,
+        atualizaMoves
       }}
     >
       {children}
-     {
-       isLevelModalOpen &&  <LevelUpModal />
-     }
+      {
+        isLevelModalOpen && <LevelUpModal />
+      }
     </Context.Provider>
   )
 }

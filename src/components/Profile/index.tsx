@@ -2,16 +2,26 @@ import { useContext } from "react"
 import { Context } from "../../contexts/ChallengeContext"
 import styles from "./Profile.module.css"
 
-export const Profile = () => {
+interface ProfileProps {
+  name: string
+  userName: string
+  avatar: string
+}
+
+export const Profile = ({ name, userName, avatar }: ProfileProps) => {
 
   const { level } = useContext(Context)
 
   return (
     <div className={styles.profileContainer}>
-      <img src="https://avatars.githubusercontent.com/u/43673479?s=400&v=4" alt="" />
+      <img src={avatar} alt="" />
 
       <div>
-        <strong>William</strong>
+        <strong>
+          {
+            name.length > 1 && name !== "null" ? name : userName
+          }
+        </strong>
         <p>
           <img src="icons/level.svg" alt="Level" />
           Level {level}
