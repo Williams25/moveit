@@ -31,8 +31,8 @@ const Home = () => {
         router.push('home')
       }
     }).catch(e => {
-      const { mensagem } = e.response.data
-      setErro(mensagem)
+      const { message } = e.response.data
+      setErro(message)
     })
   }
 
